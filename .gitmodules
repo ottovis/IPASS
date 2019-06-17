@@ -1,0 +1,12 @@
+[submodule "v1oopc-examples"]
+	path = v1oopc-examples
+	url = https://github.com/ottovis/v1oopc-examples.git
+[submodule "hwlib"]
+	path = hwlib
+	url = https://github.com/wovo/hwlib
+[submodule "bmptk"]
+	path = bmptk
+	url = https://github.com/wovo/bmptk
+[submodule "Catch2"]
+	path = Catch2
+	url = https://github.com/catchorg/Catch2
