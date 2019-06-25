@@ -1,10 +1,11 @@
 #include "hwlib.hpp"
 
 int main() {
+  hwlib::cout << " test/n";
   namespace target = hwlib::target;
 
   auto tx = target::pin_out(target::pins::d50);
-  auto rx = target::pin_in(target::pins::d51);
+  // auto rx = target::pin_in(target::pins::d51);
   // auto button = target::pin_in( target::pins::d40 );
   // auto led = target::pin_out( target::pins::d47 );
   // auto scl = target::pin_oc( target::pins::scl );
@@ -20,21 +21,24 @@ int main() {
   // volatile int tmp = 0;
 
   // led.write(0); led.flush();
-  bool status = false;
-  int tmp = 0;
+  // bool status = false;
+  // int tmp = 0;
 
   while (true) {
-    status = !status;
-    for (int j = 0; j < 10; j++) {
-      tx.write(status);
-      for (int i = 0; i < 200; i++) {
-        tmp += rx.read();
-        hwlib::wait_us(1);
-      }
-      hwlib::cout << tmp << "\n";
-      tmp = 0;
-    }
-    hwlib::cout << "switch: " << status << "\n";
+    tx.write(0);
+    hwlib::wait_us(900);
+    tx.write(1);
+    hwlib::wait_us(3000);
+    tx.write(0);
+    hwlib::wait_us(900);
+    tx.write(1);
+    hwlib::wait_us(900);
+    tx.write(0);
+    hwlib::wait_us(900);
+    tx.write(1);
+    hwlib::wait_us(900);
+    hwlib::wait_ms(5000);
+
   }
 
   return 0;

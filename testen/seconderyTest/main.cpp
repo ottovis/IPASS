@@ -1,12 +1,29 @@
 #include "hwlib.hpp"
 
+class pin_in_5 : public hwlib::target::pin_in{
+  private:
+  int counter_5 = 0;
+  public:
+  pin_in_5(due::pins pin): hwlib::target::pin_in(pin){};
+  bool read_10(){
+    counter_5 = 0;
+    for (int i = 0; i < 50; i++)
+    {
+      hwlib::wait_us(1);
+      counter_5 += read();
+    }
+    
+    return counter_5 < 45 ? true : false;
+  }
+};
+
 int main() {
   namespace target = hwlib::target;
 
-  auto trancemitter = target::pin_out(target::pins::d50);
+  auto rx = pin_in_5(target::pins::d50);
   //   auto reciever = target::pin_in(target::pins::d51);
   //   auto button = target::pin_in(target::pins::d40);
-  // auto led = target::pin_out( target::pins::d47 );
+  auto led = target::pin_out( target::pins::d53 );
   // auto scl = target::pin_oc( target::pins::scl );
   // auto sda = target::pin_oc( target::pins::sda );
 
@@ -18,17 +35,26 @@ int main() {
 
   // volatile bool pulseBit = false;
   // volatile int tmp = 0;
+  // int errAllowance = 10;
 
-  // led.write(0); led.flush();
+  led.write(1); led.flush();
 
   while (true) {
-    trancemitter.write(1);
-    hwlib::wait_ms(10);
-    trancemitter.write(0);
-    hwlib::wait_ms(10);
-  }
 
+
+    if (rx.read_10())
+    {
+      led.write(1); led.flush();
+      hwlib::wait_us(50);
+    }
+    else{
+    led.write(0); led.flush();
+    hwlib::wait_us(50);
+    }
+
+  }
   return 0;
+  
 }
 
 // tmp = 0;
