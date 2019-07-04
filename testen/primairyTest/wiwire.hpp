@@ -36,7 +36,7 @@ class wiwire{
   startPin(hwlib::target::pin_out(hwlib::target::pins::d29))
   {};
   int broadcast(const char * msg, const int & sizeMsg);
-  int send(const char * msg, const int & sizeMsg);
+  int send(const char *msg, const int & sizeMsg);
   char blockRead(char *msg);
 };
 
@@ -44,7 +44,7 @@ int wiwire::send(const char * msg, const int & sizeMsg){
   int attemptCounter = 0;
   char readByte = 0;
   do{
-    if (attemptCounter > 3)
+    if (attemptCounter > 7)
     {
       return -1;
     }
@@ -136,7 +136,7 @@ char wiwire::readOneByte(){
     rollingBuffer[i] = rxPin.read(); 
   }
   // testProbe.write(1); testProbe.flush();
-  while(bitsRead < 8 && watchdog < 3000){
+  while(bitsRead < 8 && watchdog < 1000){
     watchdog++;
     testProbe.write(bitsRead%2); testProbe.flush();
     bitcount = 0;

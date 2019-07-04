@@ -6,7 +6,7 @@ int main() {
 
   auto tx = target::pin_out(target::pins::d50);
   auto rx = target::pin_in(target::pins::d51);
-  // auto button = target::pin_in( target::pins::d40 );
+  auto button = target::pin_in( target::pins::d40 );
   // auto led = target::pin_out( target::pins::d47 );
   // auto scl = target::pin_oc( target::pins::scl );
   // auto sda = target::pin_oc( target::pins::sda );
@@ -18,7 +18,6 @@ int main() {
   tx.write(0); tx.flush();
   wiwire wire(tx, rx);
   int sizeMsg = 12;
-
   const char msg[12] = "Hello world";
 
   while (true) {
@@ -29,7 +28,7 @@ int main() {
     else{
       hwlib::cout << "succesfully send in " << tmp << " tries \n";
     }
-    hwlib::wait_ms(50);
+    hwlib::wait_ms(1000);
     hwlib::cout << "Sending..." << '\n';
   }
   return 0;
