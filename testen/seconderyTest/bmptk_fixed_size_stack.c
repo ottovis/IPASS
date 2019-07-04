@@ -6,5 +6,5 @@
 // AUTOMATIC means calculate the required stack size and allocate a stack 
 // of that size, but the application must first be linked, and for that 
 // a dummy stack must be used to make the compilation successful.
-unsigned char bmptk_stack[ 1536 ]
+unsigned char bmptk_stack[ 73728 ]
    __attribute__ (( section( ".bmptk_stack" )));
