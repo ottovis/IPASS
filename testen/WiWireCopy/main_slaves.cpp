@@ -22,13 +22,14 @@ int main() {
   auto tx = target::pin_out(target::pins::d50);
   auto rx = target::pin_in(target::pins::d51);
 
- auto led = target::pin_out(target::pins::d40);
+  auto led = target::pin_out(target::pins::d40);
+
+  auto whiteButton = target::pin_in( target::pins::d47 );
+
 
   hwlib::wait_ms(1000);
 
-  wiwire wire(tx, rx, 0x0A);
-  hwlib::cout << "init"
-              << "\n";
+  wiwire wire(tx, rx, 0x0D);
 
   while (true) {
     char msg[256] = {};
@@ -38,9 +39,15 @@ int main() {
       hwlib::cout << msg[i];
     }
     hwlib::cout << "\n";
-  led.write(1); led.flush();
-  hwlib::wait_ms(1000);
-  led.write(0); led.flush();
+    led.write(1); led.flush();
+    hwlib::wait_ms(1000);
+    led.write(0); led.flush();
+    if (whiteButton.read())
+    {
+      const char msgSend[12] = "Hello world";
+      wire.send(msgSend, 12, 0x0A);
+    }
   }
+  
   return 0;
 }

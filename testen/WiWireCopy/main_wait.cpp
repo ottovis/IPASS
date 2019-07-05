@@ -22,11 +22,11 @@ int main() {
   auto tx = target::pin_out(target::pins::d50);
   auto rx = target::pin_in(target::pins::d51);
 
- auto led = target::pin_out(target::pins::d40);
+  auto led = target::pin_out(target::pins::d40);
 
   hwlib::wait_ms(1000);
 
-  wiwire wire(tx, rx, 0x0A);
+  wiwire wire(tx, rx, 0x0C);
   hwlib::cout << "init"
               << "\n";
 
@@ -38,9 +38,9 @@ int main() {
       hwlib::cout << msg[i];
     }
     hwlib::cout << "\n";
-  led.write(1); led.flush();
-  hwlib::wait_ms(1000);
-  led.write(0); led.flush();
+    led.write(1); led.flush();
+    hwlib::wait_ms(1000);
+    led.write(0); led.flush();
   }
   return 0;
 }

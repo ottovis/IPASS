@@ -47,37 +47,35 @@ int main() {
 
   tx.write(0);
   tx.flush();
-  wiwire wire(tx, rx, 0x0F);
+  wiwire wire(tx, rx, 0x0B);
   int sizeMsg = 12;
   const char msg[12] = "Hello world";
   char hwtargetWhite = 0x0A;
-  char hwtargetBlue = 0x0B;
-  char hwtargetGreen = 0x0C;
-  char hwtargetYellow = 0x0D;
+  // char hwtargetBlue = 0x0B;
+  // char hwtargetGreen = 0x0C;
+  // char hwtargetYellow = 0x0D;
 
   while (true) {
-    if(whiteButton.read()){
+    if (whiteButton.read())
+    {
       wire.send(msg, sizeMsg, hwtargetWhite);
-      hwlib::cout << "White" << '\n';
     }
-    if(blueButton.read()){
-      wire.send(msg, sizeMsg, hwtargetBlue);
-      hwlib::cout << "Blue" << '\n';
+    char msgRecieved[12] = {};
+    int size = wire.blockRead(msgRecieved);
+    bool same = true;
+    for (int i = 0; i < size; i++)
+    {
+      if (msg[i] != msgRecieved[i])
+      {
+        same = false;
+      }
     }
-    if(greenButton.read()){
-      wire.send(msg, sizeMsg, hwtargetGreen);
-      hwlib::cout << "Green" << '\n';
+    if (same)
+    {
+      blueLed.write(1); blueLed.flush();
+      hwlib::wait_ms(1000);
+      blueLed.write(0); blueLed.flush();
     }
-    if(yellowButton.read()){
-      int tmp = wire.send(msg, sizeMsg, hwtargetYellow);
-      hwlib::cout << "Yellow" << (int)tmp <<'\n';
-    }
-    if(broadcastButton.read()){
-      hwlib::cout << "Black1" << '\n';
-      wire.broadcast(msg, sizeMsg);
-      hwlib::cout << "Black2" << '\n';
-    }
-    hwlib::wait_ms(1);
   }
   return 0;
 }
