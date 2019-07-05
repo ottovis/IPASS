@@ -16,6 +16,9 @@ int wiwire::send(const char *msg, int sizeMsg, char hwtarget) {
   char readByte = 0;
   do {
     attemptCounter++;
+    sendByte(0);
+    hwlib::wait_ms(5);
+
     if (attemptCounter > retryAmount) {
       return -1;
     }
@@ -35,6 +38,8 @@ int wiwire::send(const char *msg, int sizeMsg, char hwtarget) {
 }
 
 int wiwire::broadcast(const char *msg, const int &sizeMsg) {
+  sendByte(0);
+  hwlib::wait_ms(5);
   sendByte(STARTBYTE);
   sendByte(BROADCASTBYTE);
   sendByte(sizeMsg);
@@ -109,7 +114,7 @@ char wiwire::readOneByte() {
     rollingBuffer[i] = rxPin.read();
   }
   // testProbe.write(1); testProbe.flush();
-  while (bitsRead < 8 && watchdog < 1000) {
+  while (bitsRead < 8 && watchdog < 2000) {
     watchdog++;
     testProbe.write(bitsRead % 2);
     testProbe.flush();
@@ -236,7 +241,7 @@ retry:
     if (mode == BROADCASTBYTE) {
       return sizeMsg;
     }
-    hwlib::wait_ms(10);
+    hwlib::wait_ms(1);
     sendByte(ACKBYTE);
     return sizeMsg;
   }

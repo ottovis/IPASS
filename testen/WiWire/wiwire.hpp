@@ -85,7 +85,7 @@ class wiwire {
   hwlib::target::pin_out startPin;
 
   /// amount of allowed retries sending messages
-  int retryAmount;
+  int retryAmount = 8;
 
  public:
   ///  Only constructor of the class, takes a transciever pin, a reciever pin

@@ -21,8 +21,21 @@ int main() {
 
   auto tx = target::pin_out(target::pins::d50);
   auto rx = target::pin_in(target::pins::d51);
-  auto button = target::pin_in(target::pins::d40);
-  // auto led = target::pin_out( target::pins::d47 );
+  
+  auto whiteButton = target::pin_in( target::pins::d47 );
+  auto blueButton = target::pin_in( target::pins::d46 );
+  auto greenButton = target::pin_in( target::pins::d44 );
+  auto yellowButton = target::pin_in( target::pins::d43 );
+
+  auto broadcastButton = target::pin_in( target::pins::d45 );
+
+  auto whiteLed = target::pin_out(target::pins::d40);
+  auto blueLed = target::pin_out(target::pins::d39);
+  auto redLed = target::pin_out(target::pins::d38);
+  auto greenLed = target::pin_out(target::pins::d37);
+  auto yellowLed = target::pin_out(target::pins::d36);
+  
+
   // auto scl = target::pin_oc( target::pins::scl );
   // auto sda = target::pin_oc( target::pins::sda );
 
@@ -30,23 +43,39 @@ int main() {
   // auto display = hwlib::glcd_oled( i2c_bus, 0x3c );
   // display.clear();
 
+  yellowLed.write(0); yellowLed.flush();
+
   tx.write(0);
   tx.flush();
   wiwire wire(tx, rx, 0x0B);
   int sizeMsg = 12;
   const char msg[12] = "Hello world";
-  char hwtarget = 0x0F;
+  char hwtargetWhite = 0x0A;
+  // char hwtargetBlue = 0x0B;
+  // char hwtargetGreen = 0x0C;
+  // char hwtargetYellow = 0x0D;
 
   while (true) {
-    int tmp = wire.send(msg, sizeMsg, hwtarget);
-    if (tmp == -1) {
-      hwlib::cout << "failed to verify message recieved"
-                  << "\n";
-    } else {
-      hwlib::cout << "succesfully send in " << tmp << " tries \n";
+    if (whiteButton.read())
+    {
+      wire.send(msg, sizeMsg, hwtargetWhite);
     }
-    hwlib::wait_ms(1000);
-    hwlib::cout << "Sending..." << '\n';
+    char msgRecieved[12] = {};
+    int size = wire.blockRead(msgRecieved);
+    bool same = true;
+    for (int i = 0; i < size; i++)
+    {
+      if (msg[i] != msgRecieved[i])
+      {
+        same = false;
+      }
+    }
+    if (same)
+    {
+      blueLed.write(1); blueLed.flush();
+      hwlib::wait_ms(1000);
+      blueLed.write(0); blueLed.flush();
+    }
   }
   return 0;
 }
